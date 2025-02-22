@@ -150,5 +150,22 @@ INSERT INTO Sales (Date, ProductID, RegionID) VALUES
 ('2025-03-01', 29, 5),  -- Interactive Toy Robot, Africa
 ('2025-03-02', 30, 6);  -- Board Game Chess, Oceania
 
+-- Modifica alla tabella sales con aggiunta colonna codice documento
+ALTER TABLE Sales
+ADD COLUMN CodiceDocumento CHAR(10);
+
+-- Aggiornamento del campo codice documento, codice creato utilizzando l'id della vendita e le informazioni relative alla data
+UPDATE Sales
+SET CodiceDocumento = CONCAT(ID, YEAR(Date),MONTH(Date), DAY(Date));
+
+INSERT INTO Sales (Date, ProductID, RegionID, CodiceDocumento) VALUES
+    ('2024-05-15', 2, 1, 'A1B2C3D4E5'),  
+    ('2024-10-10', 3, 2, 'X9Y8Z7W6V5'),  
+    ('2024-06-20', 5, 3, 'Q2W3E4R5T6'),  
+    ('2024-12-01', 7, 1, 'M1N2B3V4C5'),  
+    ('2024-07-30', 1, 4, 'P9O8I7U6Y5'),  
+    ('2024-09-25', 6, 2, 'H3J4K5L6M7'),  
+    ('2024-04-05', 4, 5, 'Z1X2C3V4B5'),  
+    ('2024-11-15', 8, 3, 'T5R4E3W2Q1');  
 
 
