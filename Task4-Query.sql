@@ -19,11 +19,15 @@ JOIN State ON State.RegionID = Region.ID;
 -- 3 - Esporre l’elenco dei prodotti che hanno venduto, in totale, una quantità maggiore della media delle vendite realizzate nell’ultimo anno censito.
 -- (ogni valore della condizione deve risultare da una query e non deve essere inserito a mano).
 -- Nel result set devono comparire solo il codice prodotto e il totale venduto.
+
 SELECT Product.ID AS CodiceProdotto, COUNT(Sales.ProductID) AS TotaleVendite
 FROM Product 
 JOIN Sales ON Product.ID = Sales.ProductID
 GROUP BY Product.ID
-HAVING TotaleVendite > AVG(COUNT(Sales.ProductID));
+HAVING TotaleVendite > (SELECT AVG(SalesCount) AS AverageSales
+FROM (SELECT COUNT(*) AS SalesCount FROM Sales WHERE Date >= (SELECT MAX(Date) - INTERVAL 1 YEAR FROM Sales) GROUP BY ProductID) AS DerivedTable)
+ORDER BY TotaleVendite DESC;
+
 
 
  
