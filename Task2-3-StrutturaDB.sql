@@ -59,7 +59,7 @@ INSERT INTO Category (Name) VALUES
 ('Video Games'),
 ('Board Games');
 
-INSERT INTO Product (Name, Weight, CategoryID) VALUES
+INSERT INTO Product (Name, Weight, CategoryID, Price) VALUES
 ('Barbie Doll', 0.25, 1),
 ('Action Figure', 0.35, 1),
 ('Lego Set', 1.50, 2),
@@ -91,6 +91,7 @@ INSERT INTO Product (Name, Weight, CategoryID) VALUES
 ('Interactive Toy Robot', 1.80, 4),
 ('Board Game Chess', 0.80, 10),
 ('Outdoor Playset', 3.50, 7);
+
 
 INSERT INTO Region (Name) VALUES
 ('North America'),
@@ -178,3 +179,48 @@ INSERT INTO Sales (CodiceDocumento, Date, ProductID, RegionID) VALUES
 ('DOC000056', '2024-09-14', 27, 2),
 ('DOC000057', '2024-06-30', 27, 6),
 ('DOC000058', '2024-08-25', 27, 8);
+
+-- Inserimento campo prezzi visto che è necessario ottenere un fatturato
+ALTER TABLE Product
+ADD COLUMN Price DECIMAL(5,2);
+
+-- Popolazione campo prezzo
+UPDATE Product SET Price = 19.99 WHERE Name = 'Barbie Doll';
+UPDATE Product SET Price = 24.99 WHERE Name = 'Action Figure';
+UPDATE Product SET Price = 49.99 WHERE Name = 'Lego Set';
+UPDATE Product SET Price = 29.99 WHERE Name = 'Wooden Blocks';
+UPDATE Product SET Price = 34.99 WHERE Name = 'Race Car Set';
+UPDATE Product SET Price = 22.99 WHERE Name = 'Truck Toy';
+UPDATE Product SET Price = 14.99 WHERE Name = 'Learning Puzzle';
+UPDATE Product SET Price = 12.99 WHERE Name = 'Alphabet Blocks';
+UPDATE Product SET Price = 18.99 WHERE Name = 'Teddy Bear';
+UPDATE Product SET Price = 21.99 WHERE Name = 'Plush Elephant';
+UPDATE Product SET Price = 54.99 WHERE Name = 'Musical Keyboard';
+UPDATE Product SET Price = 32.99 WHERE Name = 'Toy Drum';
+UPDATE Product SET Price = 9.99 WHERE Name = 'Soccer Ball';
+UPDATE Product SET Price = 7.99 WHERE Name = 'Frisbee';
+UPDATE Product SET Price = 59.99 WHERE Name = 'Train Set';
+UPDATE Product SET Price = 44.99 WHERE Name = 'Toy Locomotive';
+UPDATE Product SET Price = 39.99 WHERE Name = 'Super Mario Game';
+UPDATE Product SET Price = 49.99 WHERE Name = 'FIFA Soccer Game';
+UPDATE Product SET Price = 29.99 WHERE Name = 'Monopoly';
+UPDATE Product SET Price = 24.99 WHERE Name = 'Scrabble';
+UPDATE Product SET Price = 19.99 WHERE Name = 'Baby Doll Set';
+UPDATE Product SET Price = 27.99 WHERE Name = 'Construction Vehicle';
+UPDATE Product SET Price = 64.99 WHERE Name = 'Robotic Arm Toy';
+UPDATE Product SET Price = 9.99 WHERE Name = 'Stacking Cups';
+UPDATE Product SET Price = 16.99 WHERE Name = 'Stuffed Dog';
+UPDATE Product SET Price = 25.99 WHERE Name = 'Musical Toy Xylophone';
+UPDATE Product SET Price = 5.99 WHERE Name = 'Jump Rope';
+UPDATE Product SET Price = 14.99 WHERE Name = 'Toy Airplane';
+UPDATE Product SET Price = 79.99 WHERE Name = 'Interactive Toy Robot';
+UPDATE Product SET Price = 19.99 WHERE Name = 'Board Game Chess';
+UPDATE Product SET Price = 99.99 WHERE Name = 'Outdoor Playset';
+
+-- Aggiunta di qualche prodotto non venduto
+INSERT INTO Product (Name, Weight, CategoryID, Price) VALUES
+('Dinosaur Toy', 1.50, 2, 26.99),
+('Remote Control Car', 2.20, 3, 45.99),
+('Toy Kitchen Set', 3.10, 4, 59.99),
+('Water Gun', 0.80, 7, 15.99),
+('Puzzle 1000 Pieces', 1.80, 4, 22.99);

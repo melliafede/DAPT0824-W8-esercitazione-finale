@@ -28,7 +28,57 @@ HAVING TotaleVendite > (SELECT AVG(SalesCount) AS AverageSales
 FROM (SELECT COUNT(*) AS SalesCount FROM Sales WHERE Date >= (SELECT MAX(Date) - INTERVAL 1 YEAR FROM Sales) GROUP BY ProductID) AS DerivedTable)
 ORDER BY TotaleVendite DESC;
 
+-- 4 - Esporre l’elenco dei soli prodotti venduti e per ognuno di questi il fatturato totale per anno
+-- Espone l'elenco dei soli prodotti venduti
+SELECT ID AS CodiceProdotto, Name AS NomeProdotto
+FROM Product
+WHERE Product.ID IN (SELECT ProductID FROM Sales);
 
+SELECT Product.ID AS CodiceProdotto, Product.Name AS NomeProdotto, YEAR(Sales.Date) AS Anno, SUM(Product.Price) AS FatturatoTotale
+FROM Product JOIN Sales ON Product.ID = Sales.ProductID -- Inner join restituisce solo i prodotti che compaiono in sales, quindi solo i prodotti venduti
+GROUP BY CodiceProdotto, Anno
+ORDER BY CodiceProdotto;
 
+-- 5 - Esporre il fatturato totale per stato per anno. Ordina il risultato per data e per fatturato decrescente.
+SELECT State.Name AS NomeStato, YEAR(Sales.Date) AS Anno, SUM(Product.Price) AS FatturatoTotale
+FROM Product JOIN Sales ON Product.ID = Sales.ProductID
+JOIN Region ON Sales.RegionID = Region.ID
+JOIN State ON State.RegionID = Region.ID
+GROUP BY NomeStato, Anno
+ORDER BY Anno, FatturatoTotale DESC;
+
+-- 6 - Rispondere alla seguente domanda: qual è la categoria di articoli maggiormente richiesta dal mercato?
+SELECT NomeCategoria, NumeroVendite
+FROM (
+	SELECT Category.Name AS NomeCategoria, COUNT(Sales.ProductID) AS NumeroVendite
+	FROM Category JOIN Product ON Category.ID = Product.CategoryID
+	JOIN Sales ON Product.ID = Sales.ProductID
+	GROUP BY NomeCategoria
+) AS VenditePerCategoria
+WHERE NumeroVendite = (SELECT MAX(NumeroVendite) FROM (
+	SELECT COUNT(Sales.ProductID) AS NumeroVendite
+    FROM Category JOIN Product ON Category.ID = Product.CategoryID
+    JOIN Sales ON Product.ID = Sales.ProductID
+    GROUP BY Category.ID
+) AS Subquery);
+
+-- 7 - Rispondere alla seguente domanda: quali sono i prodotti invenduti? Proponi due approcci risolutivi differenti.
+-- Primo approccio
+SELECT ID AS CodiceProdotto, Name AS NomeProdotto
+FROM Product
+WHERE ID NOT IN (SELECT ProductID FROM Sales);
+
+-- Secondo approccio
+SELECT Product.ID AS CodiceProdotto, Product.Name AS NomeProdotto
+FROM Product LEFT JOIN Sales ON Product.ID = Sales.ProductID
+WHERE Sales.CodiceDocumento IS NULL;
+
+-- 8 - Creare una vista sui prodotti in modo tale da esporre una “versione denormalizzata” delle informazioni utili (codice prodotto, nome prodotto, nome categoria)
+CREATE VIEW ProdottiCategorie AS
+SELECT Product.ID AS CodiceProdotto, Product.Name AS NomeProdotto, Category.Name AS NomeCategoria
+FROM Product JOIN Category ON Product.CategoryID = Category.ID;
  
-
+-- 9 - Creare una vista per le informazioni geografiche
+CREATE VIEW InfoGeografiche AS
+SELECT State.Name AS NomeStato, Region.Name AS NomeRegione
+FROM State JOIN Region ON State.RegionID = Region.ID;
